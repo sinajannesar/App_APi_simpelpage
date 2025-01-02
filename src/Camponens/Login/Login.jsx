@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 export default function Login() {
   const navigate = useNavigate();
   const navi = useNavigate();
+  const nav = useNavigate()
 
   const [show, setshow] = useState(false);
   return (
@@ -48,14 +49,16 @@ export default function Login() {
         </div>
         <div className=" -mt-4">
             <button 
-            onClick={() => navi("/") }
+            onClick={() => navi("/Forgot") }
             className="text-sm text-purple-950 font-semibold ml-52 hover:font-bold">
                 Forgot password?
             </button>
         </div>
       </div>
       <div className="items-center flex justify-center mt-10">
-        <button className="w-[343px] h-11 bg-purple-950 rounded-lg text-white font-semibold hover:bg-purple-900 ">
+        <button 
+        onClick={() => nav("/Homepage")}
+        className="w-[343px] h-11 bg-purple-950 rounded-lg text-white font-semibold hover:bg-purple-900 ">
           LOG IN
         </button>
       </div>
