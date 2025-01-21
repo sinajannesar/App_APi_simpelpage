@@ -3,7 +3,7 @@ import { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { CgMail } from "react-icons/cg";
 import { useNavigate } from "react-router-dom";
-import axios from "axios"; // برای ارسال درخواست به سرور
+import axios from "axios";
 
 export default function Signup() {
   const navigate = useNavigate();
@@ -39,7 +39,6 @@ export default function Signup() {
       });
 
       if (response.data.success) {
-        // انتقال به صفحه VerifyEmail
         navigate("/VerifyEmail", { state: { email: formData.email } });
       } else {
         setError(response.data.message || "Something went wrong.");
