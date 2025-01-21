@@ -1,4 +1,4 @@
-import logo from "../../assets/Logosignup.png"; 
+import logo from "../../assets/Logosignup.png";
 import { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { CgMail } from "react-icons/cg";
@@ -7,14 +7,17 @@ import axios from "axios";
 
 export default function Signup() {
   const navigate = useNavigate();
+  const navi = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [show, setShow] = useState(false);
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     password: "",
     confirmPassword: "",
   });
+
   const [error, setError] = useState("");
 
   const handleChange = (e) => {
@@ -31,7 +34,7 @@ export default function Signup() {
     }
 
     try {
-      // ارسال داده‌ها به سرور
+      // ارسال اطلاعات به API
       const response = await axios.post("https://example.com/api/register", {
         name: formData.name,
         email: formData.email,
@@ -39,6 +42,7 @@ export default function Signup() {
       });
 
       if (response.data.success) {
+        // هدایت به صفحه بعدی
         navigate("/VerifyEmail", { state: { email: formData.email } });
       } else {
         setError(response.data.message || "Something went wrong.");
@@ -68,7 +72,7 @@ export default function Signup() {
               value={formData.name}
               onChange={handleChange}
               placeholder="Design Withdesigners"
-              className="w-full border border-purple-950 rounded-md p-2 text-sm focus:outline-none focus:ring-1 focus:ring-purple-950"
+              className="w-full border border-purple-950 border-1 rounded-md p-2 text-sm focus:outline-none focus:ring-1 focus:ring-purple-950"
             />
           </div>
 
@@ -83,7 +87,7 @@ export default function Signup() {
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="designwithdesigners@gmail.com"
-                className="w-full border border-purple-950 rounded-md p-2 text-sm pl-10 focus:outline-none focus:ring-1 focus:ring-purple-950"
+                className="w-full border border-purple-950 border-1 rounded-md p-2 text-sm pl-10 focus:outline-none focus:ring-1 focus:ring-purple-950"
               />
               <svg
                 className="absolute left-2 top-1/2 transform -translate-y-1/2 text-purple-400 w-10 mt-2"
@@ -108,7 +112,7 @@ export default function Signup() {
                 value={formData.password}
                 onChange={handleChange}
                 placeholder="DesignWITHdesigners12345"
-                className="w-full border border-purple-950 rounded-md p-2 text-sm pr-10 focus:outline-none focus:ring-1 focus:ring-purple-950"
+                className="w-full border border-purple-950 border-1 rounded-md p-2 text-sm pr-10 focus:outline-none focus:ring-1 focus:ring-purple-950"
               />
               <button
                 type="button"
@@ -149,14 +153,14 @@ export default function Signup() {
         <div className="flex justify-center items-center flex-col mt-6 gap-8">
           <button
             type="submit"
-            className="h-12 w-[335px] font-semibold text-white bg-purple-900 rounded-lg hover:bg-purple-950"
+            className="h-12 w-[335px] whitespace-nowrap font-semibold text-white bg-purple-900 rounded-lg items-center hover:bg-purple-950"
           >
             SIGN UP
           </button>
           <p>
             Have an account already?
             <button
-              onClick={() => navigate("/Login")}
+              onClick={() => navi("/Login")}
               className="text-purple-900 hover:font-bold font-semibold"
             >
               Log in

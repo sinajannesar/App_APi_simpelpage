@@ -1,109 +1,208 @@
-import { useState, useRef, useEffect } from "react";
-import Back from "../../assets/BACK.png";
+import logo from "../../assets/Logosignup.png"; 
+import { useState } from "react";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { CgMail } from "react-icons/cg";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
-export default function VerifyEmail() {
-  const [otp, setOtp] = useState(Array(4).fill(""));
-  const [timeLeft, setTimeLeft] = useState(0); // مقدار اولیه تایمر 0 است
-  const inputRefs = useRef([]);
+export default function Signup() {
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
+  const [show, setShow] = useState(false);
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+  const [verificationCode, setVerificationCode] = useState(null);
+  const [enteredCode, setEnteredCode] = useState("");
+  const [error, setError] = useState("");
+  const [step, setStep] = useState(1);   
 
-  useEffect(() => {
-    if (timeLeft > 0) {
-      const timer = setInterval(() => setTimeLeft((prev) => prev - 1), 1000);
-      return () => clearInterval(timer);
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+
+    if (formData.password !== formData.confirmPassword) {
+      setError("Passwords do not match.");
+      return;
     }
-  }, [timeLeft]);
 
-  const handleInputChange = (value, index) => {
-    if (!/^\d?$/.test(value)) return;
-    const updatedOtp = [...otp];
-    updatedOtp[index] = value;
-    setOtp(updatedOtp);
-    if (value && index < otp.length - 1) {
-      inputRefs.current[index + 1].focus();
+    try {
+      
+      const response = await axios.post("https://example.com/api/register", {
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+      });
+
+      if (response.data.success) {
+        setVerificationCode(response.data.code); 
+        setStep(2); 
+      } else {
+        setError(response.data.message || "Something went wrong.");
+      }
+    } catch (err) {
+      setError(err.response?.data?.message || "Failed to sign up.");
     }
   };
 
-  const handleKeyDown = (e, index) => {
-    if (e.key === "Backspace" && !otp[index] && index > 0) {
-      inputRefs.current[index - 1].focus();
-    }
-  };
+  const handleVerify = async (e) => {
+    e.preventDefault();
+    setError("");
 
-  const resendCode = () => {
-    setOtp(Array(4).fill(""));
-    setTimeLeft(60); // شروع مجدد تایمر
-    alert("Code resent!");
+    if (enteredCode !== verificationCode) {
+      setError("The code is incorrect.");
+      return;
+    }
+
+    try {
+      
+      const response = await axios.post("https://example.com/api/verify", {
+        email: formData.email,
+        code: enteredCode,
+      });
+
+      if (response.data.success) {
+        navigate("/Login"); 
+      } else {
+        setError(response.data.message || "Verification failed.");
+      }
+    } catch (err) {
+      setError(err.response?.data?.message || "Failed to verify the code.");
+    }
   };
 
   return (
-    <div className="p-">
-      <div className="text-[18px] font-bold flex justify-center gap-14">
-        <a rel="stylesheet" href="">
-          <img src={Back} className="ml-6 mt-4" />
-        </a>
-        <p className="mt-3 mr-12">Verify your email address</p>
-      </div>
+    <div>
+      {step === 1 ? (
+        <div>
+          <div className="flex flex-col items-center justify-center mt-4">
+            <img src={logo} className="w-28 h-24" />
+            <p className="text-[18px] font-semibold text-purple-950">
+              Create An Account
+            </p>
+          </div>
+          <form onSubmit={handleSubmit}>
+            <div className="flex flex-col gap-4 w-full max-w-sm mx-auto p-4">
+              <div className="space-y-1">
+                <label className="block text-sm font-medium text-purple-950 mb-1 ">
+                  Name
+                </label>
+                <input
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  placeholder="Design Withdesigners"
+                  className="w-full border border-purple-950 rounded-md p-2 text-sm focus:outline-none focus:ring-1 focus:ring-purple-950"
+                />
+              </div>
 
-      <div>
-        <p className="text-center font-semibold mt-14">
-          We sent you a 4 digit code to verify
-          <br /> your email address (desx@gmail.com).
-          <br /> Enter in the field below.
-        </p>
-      </div>
+              <div className="space-y-1">
+                <label className="block text-sm font-medium text-purple-950 mb-1">
+                  Email Address
+                </label>
+                <div className="relative">
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    placeholder="designwithdesigners@gmail.com"
+                    className="w-full border border-purple-950 rounded-md p-2 text-sm pl-10 focus:outline-none focus:ring-1 focus:ring-purple-950"
+                  />
+                  <CgMail className="absolute left-2 top-1/2 transform -translate-y-1/2 text-purple-400 w-6 h-6" />
+                </div>
+              </div>
 
-      {/* ورودی‌های OTP */}
-      <div className="flex flex-col items-center mt-8 space-y-4">
-        <div className="flex space-x-2">
-          {otp.map((value, index) => (
-            <input
-              key={index}
-              type="text"
-              maxLength="1"
-              value={value}
-              ref={(el) => (inputRefs.current[index] = el)}
-              onChange={(e) => handleInputChange(e.target.value, index)}
-              onKeyDown={(e) => handleKeyDown(e, index)}
-              className="w-12 h-12 border border-gray-300 rounded text-center text-lg focus:ring focus:ring-purple-500"
-            />
-          ))}
+              <div className="space-y-1">
+                <label className="block text-sm font-medium text-purple-950 mb-1">
+                  Password
+                </label>
+                <div className="relative">
+                  <input
+                    type={show ? "text" : "password"}
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    placeholder="DesignWITHdesigners12345"
+                    className="w-full border border-purple-950 rounded-md p-2 text-sm pr-10 focus:outline-none focus:ring-1 focus:ring-purple-950"
+                  />
+                  <button
+                    type="button"
+                    className="absolute right-2 top-1/2 transform -translate-y-1/2 text-purple-400 w-5 h-5"
+                    onClick={() => setShow((prev) => !prev)}
+                  >
+                    {show ? <FaEyeSlash /> : <FaEye />}
+                  </button>
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <label className="block text-sm font-medium text-purple-950 mb-1">
+                  Confirm Password
+                </label>
+                <div className="relative">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    name="confirmPassword"
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                    placeholder="DesignWITHdesigners12345"
+                    className="w-full border border-purple-950 rounded-md p-2 text-sm pr-10 focus:outline-none focus:ring-1 focus:ring-purple-950"
+                  />
+                  <button
+                    type="button"
+                    className="absolute right-2 top-1/2 transform -translate-y-1/2 text-purple-400 w-5 h-5"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                  >
+                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {error && <p className="text-red-500 text-center mt-4">{error}</p>}
+
+            <div className="flex justify-center items-center flex-col mt-6 gap-8">
+              <button
+                type="submit"
+                className="h-12 w-[335px] font-semibold text-white bg-purple-900 rounded-lg hover:bg-purple-950"
+              >
+                SIGN UP
+              </button>
+            </div>
+          </form>
         </div>
-
-        {/* متن ثابت */}
-        <p className="text-[14px] font-semibold">
-          Didn’t get the code?{" "}
-          <button
-            onClick={resendCode}
-            className={`font-bold underline ${
-              timeLeft > 0 ? "cursor-not-allowed text-gray-400" : ""
-            }`}
-            disabled={timeLeft > 0}
-          >
-            Resend
-          </button>
-        </p>
-
-        {/* تایمر */}
-        {timeLeft > 0 && (
-          <p className="text-sm text-gray-600 mt-2">
-            Expires in{" "}
-            <span className="text-purple-600 font-bold">
-              0:{timeLeft.toString().padStart(2, "0")}
-            </span>
+      ) : (
+        <div className="flex flex-col items-center justify-center mt-4">
+          <p className="text-purple-950 font-semibold text-[18px]">
+            Verification Code: <span className="font-bold">{verificationCode}</span>
           </p>
-        )}
-      </div>
-
-      <div className="flex justify-center items-center">
-        <button
-          onClick={() => navigate("/Login")}
-          className="w-[343px] h-12 text-[18px] font-semibold bg-purple-950 text-white rounded-xl mt-48"
-        >
-          Submit
-        </button>
-      </div>
+          <form onSubmit={handleVerify} className="mt-6">
+            <input
+              type="text"
+              value={enteredCode}
+              onChange={(e) => setEnteredCode(e.target.value)}
+              placeholder="Enter Verification Code"
+              className="w-full border border-purple-950 rounded-md p-2 text-sm focus:outline-none focus:ring-1 focus:ring-purple-950"
+            />
+            {error && <p className="text-red-500 text-center mt-2">{error}</p>}
+            <button
+              type="submit"
+              className="h-12 w-[335px] mt-4 font-semibold text-white bg-purple-900 rounded-lg hover:bg-purple-950"
+            >
+              Verify
+            </button>
+          </form>
+        </div>
+      )}
     </div>
   );
 }
