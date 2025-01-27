@@ -7,7 +7,6 @@ import axios from "axios";
 
 export default function Signup() {
   const navigate = useNavigate();
-  const navi = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [show, setShow] = useState(false);
 
@@ -34,16 +33,15 @@ export default function Signup() {
     }
 
     try {
-      // ارسال اطلاعات به API
-      const response = await axios.post("https://example.com/api/register", {
+      const response = await axios.post("http://localhost:5000/api/register", {
         name: formData.name,
         email: formData.email,
         password: formData.password,
       });
 
       if (response.data.success) {
-        // هدایت به صفحه بعدی
-        navigate("/VerifyEmail", { state: { email: formData.email } });
+        const code = response.data.code; // دریافت کد از سرور
+        navigate("/VerifyEmail", { state: { code, email: formData.email } }); // ارسال کد و ایمیل به صفحه VerifyEmail
       } else {
         setError(response.data.message || "Something went wrong.");
       }
@@ -55,7 +53,7 @@ export default function Signup() {
   return (
     <div>
       <div className="flex flex-col items-center justify-center mt-4">
-        <img src={logo} className="w-28 h-24" />
+        <img src={logo} className="w-28 h-24" alt="Signup Logo" />
         <p className="text-[18px] font-semibold text-purple-950">
           Create An Account
         </p>
@@ -63,7 +61,7 @@ export default function Signup() {
       <form onSubmit={handleSubmit}>
         <div className="flex flex-col gap-4 w-full max-w-sm mx-auto p-4">
           <div className="space-y-1">
-            <label className="block text-sm font-medium text-purple-950 mb-1 ">
+            <label className="block text-sm font-medium text-purple-950 mb-1">
               Name
             </label>
             <input
@@ -160,7 +158,7 @@ export default function Signup() {
           <p>
             Have an account already?
             <button
-              onClick={() => navi("/Login")}
+              onClick={() => navigate("/Login")}
               className="text-purple-900 hover:font-bold font-semibold"
             >
               Log in
