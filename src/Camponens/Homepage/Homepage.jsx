@@ -14,10 +14,10 @@ export default function Homepage() {
     <div>
       <div className=" min-h-screen p-4">
         <div className="flex justify-between items-center mb-4">
-            <a href="#">
+          <a href="#">
             <BsGridFill className="text-purple-900 text-2xl -mt-3" />
-            </a>
-          
+          </a>
+
           <img src={face} alt="" />
         </div>
         <div className="text-xl font-bold -mt-4">Hello, Habibah</div>
@@ -37,13 +37,6 @@ export default function Homepage() {
             <button className="mt-16 bg-[#C983DE] w-18 h-7 ml-2 text-whait text-sm font-semibold py-1 px-3 rounded">
               View now
             </button>
-          </div>
-          <div className="ml-auto">
-            <img
-              src="https://via.placeholder.com/100"
-              alt="Illustration"
-              className="w-20 h-20"
-            />
           </div>
         </div>
 
@@ -73,7 +66,7 @@ export default function Homepage() {
             <div className="ml-4 ">
               <h4 className="font-bold">Photoshop Course</h4>
               <p className="text-gray-500 text-sm -ml-2 flex gap-2">
-                ⭐ 4.5 <FaClock  className="mt-1"/>
+                ⭐ 4.5 <FaClock className="mt-1" />
                 5h 15m
               </p>
             </div>

@@ -50,7 +50,7 @@ export default function VerifyEmail() {
   const handleSubmit = () => {
     const enteredCode = otp.join(""); 
     if (enteredCode === generatedCode) {
-      navigate("/Login"); 
+      navigate("/Homepage"); 
     } else {
       setError("The code you entered is incorrect. Please try again."); 
     }
@@ -65,9 +65,9 @@ export default function VerifyEmail() {
   return (
     <div className="p-6">
       <div className="text-[18px] font-bold flex justify-center gap-14">
-        <a rel="stylesheet" href="">
+        <button rel="stylesheet" onClick={() => navigate(-1)}>
           <img src={Back} className="ml-6 mt-4" />
-        </a>
+        </button>
         <p className="mt-3 mr-12 whitespace-nowrap">Verify your email address</p>
       </div>
 
