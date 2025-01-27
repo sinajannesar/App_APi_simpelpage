@@ -18,7 +18,7 @@ export default function Resetpassword() {
           </label>
           <input
             type="text"
-            placeholder="*******************"
+            placeholder="************"
             className="w-[336px] h-11 border border-purple-900 border-1 rounded-md p-2 text-sm focus:outline-none focus:ring-1 focus:ring-purple-950"
           />
         </div>
@@ -35,7 +35,9 @@ export default function Resetpassword() {
         </div>
       </div>
       <div className="flex justify-center items-center mt-28">
-        <button className="font-semibold text-white w-[336px] h-11 bg-purple-900 hover:bg-purple-950 transition-all rounded-xl">Submit </button>
+        <button 
+        onClick={() => navigate("/Login")}
+        className="font-semibold text-white w-[336px] h-11 bg-purple-900 hover:bg-purple-950 transition-all rounded-xl">Submit </button>
       </div>
     </div>
   );

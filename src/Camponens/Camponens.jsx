@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navigashion from "./Hedear/Navigashion";
 import Onbording1 from "../Camponens/Onbording/Onbording1";
 import Signup from "./Signup/Signup";
@@ -9,19 +9,10 @@ import Resetpassword from "./Login/Resetpassword";
 import Homepage from "./Homepage/Homepage";
 
 function LayoutWrapper() {
-  const location = useLocation();
-
-  const wrapperStyles = {
-    default: "w-[375px] h-[667px]",
-    forgot: "w-[400px] h-[500px]",
-  };
-
-  const currentStyle =
-    location.pathname === "/Forgot" ? wrapperStyles.forgot : wrapperStyles.default;
 
   return (
     <div className="flex justify-center items-center h-screen bg-gray-100">
-      <div className={`${currentStyle} bg-white shadow-lg rounded-lg overflow-hidden`}>
+      <div className=" w-[375px] h-[667px] bg-white shadow-lg rounded-lg overflow-hidden">
         <Navigashion />
         <Routes>
           <Route path="/" element={<Onbording1 />} />
